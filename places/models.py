@@ -6,11 +6,16 @@ from groups.models import *
 
 User = settings.AUTH_USER_MODEL
 
+
 class Place(models.Model):
-    google_maps_id = models.CharField(primary_key=True, max_length=50, default='')
+    google_maps_id = models.CharField(primary_key=True, max_length=100, default='')
     name = models.CharField(max_length=50)
     latitude = models.DecimalField(max_digits=11, decimal_places=7, default=0)
     longitude = models.DecimalField(max_digits=11, decimal_places=7, default=0)
+    address = models.TextField()
+    phone_number = models.CharField(max_length=30)
+    photos = models.TextField()
+    google_maps_url = models.TextField()
 
 
 class PlaceList(models.Model):

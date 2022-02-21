@@ -16,10 +16,13 @@ class PlaceViewSet(viewsets.ModelViewSet):
 class BasePlaceListViewSet(viewsets.ModelViewSet):
     
     def create_place(self, data):
-        place_data = {k: data[k] for k in ['google_maps_id', 'name']}
+        # DecimalField의 max_digits 속성을 맞추기 위해 위도, 경도 값의 자리수를 맞춰준다.
         for geometry in ['latitude', 'longitude']:
-            place_data[geometry] = round(data[geometry], 10)
-        place_serializer = PlaceSerializer(data=place_data)
+            data[geometry] = round(data[geometry], 10)
+        # array 형식으로 전달된 photos 값을 TextField로 저장하기 위해 join
+        data['photos'] = ', '.join(data['photos'])
+        
+        place_serializer = PlaceSerializer(data=data)
         if place_serializer.is_valid(raise_exception=True):
             return place_serializer.save()
 
