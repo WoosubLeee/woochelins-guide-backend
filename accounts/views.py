@@ -20,7 +20,7 @@ def signup(request):
         user.save()
         
         place_list_serializer = PlaceListSerializer(data={
-            'name': '내 리스트',
+            'name': '나의 맛집',
             'user': user.id,
             'is_default': True,
         })
