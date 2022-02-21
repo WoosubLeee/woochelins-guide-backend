@@ -32,4 +32,4 @@ class GroupPlaceList(models.Model):
 class GroupPlace(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     place_list = models.ForeignKey(GroupPlaceList, on_delete=models.CASCADE, related_name='places')
-    recommended_by = models.ManyToManyField(User, blank=True)
+    recommended_by = models.ManyToManyField(User, blank=True, related_name='recommended')

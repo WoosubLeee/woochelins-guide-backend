@@ -1,3 +1,4 @@
+from tkinter import EW
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
@@ -5,6 +6,11 @@ from .permissions import *
 from places.models import *
 from places.serializers import *
 from groups.serializers import *
+
+
+class PlaceViewSet(viewsets.ModelViewSet):
+    queryset = Place.objects.all()
+    serializer_class = PlaceSerializer
 
 
 class BasePlaceListViewSet(viewsets.ModelViewSet):
@@ -88,15 +94,43 @@ class GroupPlaceListViewSet(BasePlaceListViewSet):
             이미 생성된 GroupPlace인지 확인하여
             없다면 생성, 있다면 가져오기
             '''
-            group_place_data = {
-                'place': place.google_maps_id,
-                'place_list': place_list,
-            }
-            group_place_serializer = GroupPlaceSerializer(data=group_place_data)
-            if group_place_serializer.is_valid(raise_exception=True):
-                group_place = group_place_serializer.save()
+            group_place = GroupPlace(place=place, place_list=place_list)
+            group_place.save()
         else:
             group_place = place_list.places.get(place=google_maps_id)
         
         group_place.recommended_by.add(request.user)
         return Response(GroupPlaceListSerializer(place_list).data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['delete'])
+    def remove(self, request, pk):
+        data = request.data
+        google_maps_id = data['google_maps_id']
+
+        group_place = GroupPlace.objects.get(place_list_id=pk, place_id=google_maps_id)
+        group_place.recommended_by.remove(request.user.id)
+        if len(group_place.recommended_by.all()) == 0:
+            group_place.delete()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+'''
+특정 장소를 저장한 PlaceList나 GroupPlaceList가 있는지 확인
+'''
+@api_view(['GET'])
+def get_user_saved_place(request, google_maps_id):
+    data = {
+        'groups': [],
+        'place_lists': [],
+    }
+    
+    recommendeds = request.user.recommended.filter(place_id=google_maps_id)
+    for recommended in recommendeds:
+        data['groups'].append(recommended.place_list.group_id)
+    
+    for place_list in request.user.place_lists.all():
+        if place_list.places.filter(google_maps_id=google_maps_id).exists():
+            data['place_lists'].append(place_list.id)
+
+    return Response(data, status=status.HTTP_200_OK)

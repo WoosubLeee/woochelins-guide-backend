@@ -17,9 +17,11 @@ class PlaceListSerializer(serializers.ModelSerializer):
 
 
 class GroupPlaceSerializer(serializers.ModelSerializer):
+    place = PlaceSerializer()
+
     class Meta:
         model = GroupPlace
-        fields = '__all__'
+        fields = ('id', 'place', 'place_list', 'recommended_by',)
 
 
 class GroupPlaceListSerializer(serializers.ModelSerializer):
