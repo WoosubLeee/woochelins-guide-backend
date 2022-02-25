@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from places.models import PlaceList
 
 
 class UserManager(BaseUserManager):
@@ -31,8 +31,8 @@ class User(AbstractBaseUser):
         unique=True,
     )
     username = models.CharField(
-        max_length=30,
-        blank=False
+        max_length=15,
+        validators=[RegexValidator("^[가-힣a-zA-Z0-9]*$")]
     )
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)

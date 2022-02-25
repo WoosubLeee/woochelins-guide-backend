@@ -1,11 +1,11 @@
-from tkinter import EW
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from .permissions import *
-from places.models import *
-from places.serializers import *
+from .models import *
+from .serializers import *
 from groups.serializers import *
+from accounts.serializers import UserSerializer
 
 
 class PlaceViewSet(viewsets.ModelViewSet):
@@ -19,8 +19,6 @@ class BasePlaceListViewSet(viewsets.ModelViewSet):
         # DecimalField의 max_digits 속성을 맞추기 위해 위도, 경도 값의 자리수를 맞춰준다.
         for geometry in ['latitude', 'longitude']:
             data[geometry] = round(data[geometry], 10)
-        # array 형식으로 전달된 photos 값을 TextField로 저장하기 위해 join
-        data['photos'] = ', '.join(data['photos'])
         
         place_serializer = PlaceSerializer(data=data)
         if place_serializer.is_valid(raise_exception=True):
@@ -116,6 +114,14 @@ class GroupPlaceListViewSet(BasePlaceListViewSet):
             group_place.delete()
         
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def get_group_place_recommended_by(request, pk, google_maps_id):
+    place_list = GroupPlaceList.objects.get(group_id=pk)
+    group_place = place_list.places.get(place_id=google_maps_id)
+    recommended_by = UserSerializer(group_place.recommended_by.all(), many=True)
+    return Response(recommended_by.data, status.HTTP_200_OK)
 
 
 '''

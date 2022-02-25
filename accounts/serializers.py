@@ -15,6 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
 
+class UserForGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username',)
+
+
 class CustomAuthTokenSerializer(serializers.Serializer):
     email = serializers.CharField(write_only=True)
     password = serializers.CharField(
