@@ -23,9 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-l57q1y58i=vg^tw6dv-=3jd6gu(axji%&3lxv19^&=+gm-uv8v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'woosubleee.pythonanywhere.com',
+]
 
 
 # Application definition
@@ -131,8 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://192.168.0.3:3000',
+    'https://woochelins-guide.netlify.app',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
