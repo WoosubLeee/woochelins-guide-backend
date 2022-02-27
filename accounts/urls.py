@@ -6,5 +6,5 @@ urlpatterns = [
     path('signup/', views.signup),
     path('login/', views.CustomAuthToken.as_view()),
     path('validate/', views.is_valid),
-    path('groups-lists/', views.get_user_groups_lists),
+    path('groups-placelists/', views.get_user_groups_placelists),
 ]

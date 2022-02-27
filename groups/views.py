@@ -77,5 +77,5 @@ def validate_invitation(request, pk, token):
             'detail': 'The token is invalid.',
         }, status.HTTP_403_FORBIDDEN)
     return Response({
-        'groud_name': group.name,
+        'group_name': group.name,
     },status=status.HTTP_202_ACCEPTED)
