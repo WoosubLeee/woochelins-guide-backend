@@ -19,6 +19,17 @@ class GroupSerializer(serializers.ModelSerializer):
         return group
 
 
+'''
+accounts/groups-placelists 에 사용하는 Serializer
+'''
+class GroupSerializerInfo(serializers.ModelSerializer):
+    members = UserForGroupSerializer(read_only=True, many=True)
+    
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'members',)
+
+
 class GroupInvitationTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupInvitationToken

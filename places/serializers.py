@@ -16,6 +16,15 @@ class PlaceListSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'user', 'is_default', 'places',)
 
 
+'''
+accounts/groups-placelists 에 사용하는 Serializer
+'''
+class PlaceListSerializerInfo(serializers.ModelSerializer):
+    class Meta:
+        model = PlaceList
+        fields = ('id', 'name',)
+
+
 class GroupPlaceSerializer(serializers.ModelSerializer):
     place = PlaceSerializer()
 
