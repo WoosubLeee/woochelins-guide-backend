@@ -12,6 +12,11 @@ class PlaceViewSet(viewsets.ModelViewSet):
     queryset = Place.objects.all()
     serializer_class = PlaceSerializer
 
+    def retrieve(self, request, *args, **kwargs):
+        if not Place.objects.filter(google_maps_id=kwargs['pk']).exists():
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return super().retrieve(request, *args, **kwargs)
+
 
 class BasePlaceListViewSet(viewsets.ModelViewSet):
     
