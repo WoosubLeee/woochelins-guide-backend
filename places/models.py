@@ -12,8 +12,8 @@ class Place(models.Model):
     name = models.CharField(max_length=50)
     latitude = models.DecimalField(max_digits=11, decimal_places=7, default=0)
     longitude = models.DecimalField(max_digits=11, decimal_places=7, default=0)
-    address = models.TextField()
-    phone_number = models.CharField(max_length=30)
+    address = models.TextField(blank=True, null=True)
+    phone_number = models.CharField(max_length=30, blank=True, null=True)
     google_maps_url = models.TextField()
 
 
