@@ -35,14 +35,15 @@ class PlaceListViewSet(BasePlaceListViewSet):
     serializer_class = PlaceListSerializer
     permission_classes = [PlaceListPermission]
 
-    def list(self, request):
-        place_lists = request.user.place_lists.all()
-        serializer = PlaceListSerializer(place_lists, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def create(self, request):
         request.data['user'] = request.user.id
         return super().create(request)
+
+    @action(detail=False, methods=['get'])
+    def user(self, request):
+        place_lists = request.user.place_lists.all()
+        serializer = PlaceListSerializer(place_lists, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     def add(self, request, pk):

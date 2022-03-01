@@ -57,15 +57,4 @@ def is_valid(request):
     if request.user.is_authenticated:
         return Response('The user is authenticated.', status=status.HTTP_200_OK)
     return Response('The user is not authenticated', status=status.HTTP_401_UNAUTHORIZED)
-
-
-@api_view(['GET'])
-@permission_classes([UserPermission])
-def get_user_groups_placelists(request):
-    groups = GroupSerializer(request.user.groups.all(), many=True)
-    place_lists = PlaceListSerializer(request.user.place_lists.all(), many=True)
-    data = {
-        'groups': groups.data,
-        'place_lists': place_lists.data,
-    }
-    return Response(data, status=status.HTTP_200_OK)
+    
