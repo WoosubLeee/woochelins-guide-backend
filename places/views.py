@@ -128,24 +128,3 @@ def get_group_place_recommended_by(request, pk, google_maps_id):
     group_place = place_list.places.get(place_id=google_maps_id)
     recommended_by = UserSerializer(group_place.recommended_by.all(), many=True)
     return Response(recommended_by.data, status.HTTP_200_OK)
-
-
-'''
-특정 장소를 저장한 PlaceList나 GroupPlaceList가 있는지 확인
-'''
-@api_view(['GET'])
-def get_user_saved_place(request, google_maps_id):
-    data = {
-        'groups': [],
-        'place_lists': [],
-    }
-    
-    recommendeds = request.user.recommended.filter(place_id=google_maps_id)
-    for recommended in recommendeds:
-        data['groups'].append(recommended.place_list.group_id)
-    
-    for place_list in request.user.place_lists.all():
-        if place_list.places.filter(google_maps_id=google_maps_id).exists():
-            data['place_lists'].append(place_list.id)
-
-    return Response(data, status=status.HTTP_200_OK)
