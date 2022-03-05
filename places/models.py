@@ -18,7 +18,7 @@ class Place(models.Model):
 
 
 class PlaceList(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=12)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='place_lists')
     is_default = models.BooleanField(default=False, blank=True)
     places = models.ManyToManyField(Place, related_name='place_lists', blank=True)
