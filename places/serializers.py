@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from accounts.serializers import UserSerializer
 
 
 class PlaceSerializer(serializers.ModelSerializer):
@@ -8,34 +9,18 @@ class PlaceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PlaceListSerializer(serializers.ModelSerializer):
-    places = PlaceSerializer(read_only=True, many=True)
-
-    class Meta:
-        model = PlaceList
-        fields = ('id', 'name', 'user', 'is_default', 'places',)
-
-
-'''
-accounts/groups-placelists 에 사용하는 Serializer
-'''
-class PlaceListSerializerInfo(serializers.ModelSerializer):
-    class Meta:
-        model = PlaceList
-        fields = ('id', 'name',)
-
-
 class GroupPlaceSerializer(serializers.ModelSerializer):
-    place = PlaceSerializer()
+    place = PlaceSerializer(read_only=True)
+    recommenders = UserSerializer(read_only=True, many=True)
 
     class Meta:
         model = GroupPlace
-        fields = ('id', 'place', 'place_list', 'recommended_by',)
+        fields = ('id', 'place', 'group', 'recommenders',)
 
 
-class GroupPlaceListSerializer(serializers.ModelSerializer):
-    places = GroupPlaceSerializer(read_only=True, many=True)
+class MyListSerializer(serializers.ModelSerializer):
+    places = PlaceSerializer(read_only=True, many=True)
 
     class Meta:
-        model = GroupPlaceList
-        fields = ('group', 'places',)
+        model = MyList
+        fields = ('id', 'name', 'user', 'is_default', 'places',)

@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
     path('signup/', views.signup),
     path('login/', views.CustomAuthToken.as_view()),
-    path('validate/', views.is_valid),
+    path('validate/', views.validate),
 ]

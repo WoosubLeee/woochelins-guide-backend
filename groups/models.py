@@ -9,20 +9,20 @@ User = settings.AUTH_USER_MODEL
 class Group(models.Model):
     name = models.CharField(max_length=12)
     members = models.ManyToManyField(User, related_name='groups', blank=True)
-    admin = models.ManyToManyField(User, related_name='group_admins', blank=True)
+    admins = models.ManyToManyField(User, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def validate_not_in_group(self, request, pk):
+    def is_user_in_group(self, request, pk):
         group = Group.objects.get(id=pk)
         if group.members.filter(id=request.user.id).exists():
-            return False
-        return True
+            return True
+        return False
 
-    def validate_token(self, pk, token):
+    def is_token_valid(self, pk, token):
         group = Group.objects.get(id=pk)
         try:
             token = group.invitation_tokens.get(token=token)
-            if (datetime.now()- token.created_at).days >= 1:
+            if (datetime.now() - token.created_at).days >= 1:
                 return False
             return True
         except:

@@ -5,11 +5,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
-
+from .serializers import *
 from .permissions import *
-from .serializers import UserSerializer, CustomAuthTokenSerializer
-from places.serializers import PlaceListSerializer
-from groups.serializers import GroupSerializer
+from places.serializers import MyListSerializer
 
 
 User = get_user_model()
@@ -18,26 +16,23 @@ User = get_user_model()
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def signup(request):
-    if not User.objects.filter(email=request.data['email']).exists():
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            user.set_password(request.data.get('password'))
-            user.save()
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        user = serializer.save()
+        user.set_password(request.data.get('password'))
+        user.save()
             
-            place_list_serializer = PlaceListSerializer(data={
-                'name': '나의 맛집',
-                'user': user.id,
-                'is_default': True,
-            })
-            if place_list_serializer.is_valid(raise_exception=True):
-                place_list_serializer.save()
-            
+        my_list_serializer = MyListSerializer(data={
+            'name': '나의 맛집 리스트',
+            'user': user.id,
+            'is_default': True,
+        })
+        if my_list_serializer.is_valid(raise_exception=True):
+            my_list_serializer.save()
+                
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response({
-        'email_exists': True,
-        'detail': 'A user with the email already exists.'
-    }, status.HTTP_400_BAD_REQUEST)
+        return Response(my_list_serializer.data, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
 class CustomAuthToken(ObtainAuthToken):
@@ -49,11 +44,11 @@ class CustomAuthToken(ObtainAuthToken):
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             'token': token.key,
-        })
+        }, status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
-def is_valid(request):
+def validate(request):
     if request.user.is_authenticated:
         return Response('The user is authenticated.', status=status.HTTP_200_OK)
     return Response('The user is not authenticated', status=status.HTTP_401_UNAUTHORIZED)
