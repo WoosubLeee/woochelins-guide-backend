@@ -7,7 +7,5 @@ router = DefaultRouter()
 router.register(r'', views.GroupViewSet)
 
 urlpatterns = [
-    path('<int:pk>/invitation/', views.create_token),
-    path('<int:pk>/invitation/<str:token>/', views.validate_invitation),
     path('', include(router.urls)),
 ]

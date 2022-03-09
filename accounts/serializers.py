@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
+from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,12 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
         if len(value) < 8:
             raise serializers.ValidationError('The password length must be greater than or equal to 8')
         return value
-
-
-class UserForGroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = ('id', 'username',)
 
 
 class CustomAuthTokenSerializer(serializers.Serializer):

@@ -1,33 +1,16 @@
 from rest_framework import serializers
 from .models import *
-from places.models import GroupPlaceList
-from places.serializers import GroupPlaceListSerializer
-from accounts.serializers import UserForGroupSerializer
+from accounts.serializers import UserSerializer
+from places.serializers import GroupPlaceSerializer
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    place_list = GroupPlaceListSerializer(read_only=True)
-    members = UserForGroupSerializer(read_only=True, many=True)
+    places = GroupPlaceSerializer(read_only=True, many=True)
+    members = UserSerializer(read_only=True, many=True)
 
     class Meta:
         model = Group
-        fields = ('id', 'name', 'place_list', 'created_at', 'members', 'admin',)
-
-    def create(self, validated_data):
-        group = Group.objects.create(**validated_data)
-        GroupPlaceList.objects.create(group=group)
-        return group
-
-
-'''
-accounts/groups-placelists 에 사용하는 Serializer
-'''
-class GroupSerializerInfo(serializers.ModelSerializer):
-    members = UserForGroupSerializer(read_only=True, many=True)
-    
-    class Meta:
-        model = Group
-        fields = ('id', 'name', 'members',)
+        fields = ('id', 'name', 'places', 'created_at', 'members', 'admins',)
 
 
 class GroupInvitationTokenSerializer(serializers.ModelSerializer):
