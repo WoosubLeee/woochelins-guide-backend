@@ -37,7 +37,7 @@ class GroupViewSet(viewsets.ModelViewSet):
             token = request.query_params['token']
             if not group.is_user_in_group(request, pk):
                 if group.is_token_valid(pk, token):
-                    return Response(status=status.HTTP_200_OK)
+                    return Response(GroupSerializer(group).data, status=status.HTTP_200_OK)
                 return Response({'message': '유효하지 않은 토큰입니다.'}, status.HTTP_400_BAD_REQUEST)
             return Response({'message': '이미 가입한 모임입니다.'}, status.HTTP_400_BAD_REQUEST)
         elif request.method == 'POST':
