@@ -3,7 +3,7 @@
 >너와 나의 맛집 지도!
 >우슐랭가이드
 
-[사이트 링크](https://woochelins-guide.netlify.app/)
+[사이트 링크](http://woochelinsguide.com/)
 
 [Frontend repository 링크](https://github.com/WoosubLeee/woochelins-guide-frontend)
 
