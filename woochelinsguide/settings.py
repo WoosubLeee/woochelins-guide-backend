@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from woochelinsguide.env import get_env_vars
+
+
+ENV_VARS = get_env_vars()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l57q1y58i=vg^tw6dv-=3jd6gu(axji%&3lxv19^&=+gm-uv8v'
+SECRET_KEY = ENV_VARS['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENV_VARS['DEBUG']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ENV_VARS['ALLOWED_HOSTS']
 
 
 # Application definition
@@ -130,10 +134,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://192.168.0.3:3000',
-]
+CORS_ALLOWED_ORIGINS = ENV_VARS['CORS_ALLOWED_ORIGINS']
 
 AUTH_USER_MODEL = 'accounts.User'
 
